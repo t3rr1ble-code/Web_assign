@@ -23,46 +23,104 @@ function infixToPostfix(infix) {
         return 0;
     };
 
+    let numberBuffer = ''; // Bộ đệm để lưu các số nhiều chữ số
+
     for (let i = 0; i < infix.length; i++) {
         const token = infix[i];
 
-        if (!isNaN(token)) {
-            // Nếu là số, thêm vào chuỗi hậu tố
-            postfix += token;
-        } else if (token === '(') {
-            // Nếu là dấu mở ngoặc, đẩy vào stack
-            stack.push(token);
-        } else if (token === ')') {
-            // Nếu là dấu đóng ngoặc, lấy các toán tử ra khỏi stack cho đến khi gặp dấu mở ngoặc
-            while (stack.length && stack[stack.length - 1] !== '(') {
-                postfix += stack.pop();
-            }
-            stack.pop(); // Bỏ dấu mở ngoặc
+        if (!isNaN(token) || token === '.') {
+            // Nếu là số hoặc dấu thập phân, thêm vào bộ đệm
+            numberBuffer += token;
         } else {
-            // Nếu là toán tử, xử lý độ ưu tiên
-            while (
-                stack.length &&
-                precedence(token) <= precedence(stack[stack.length - 1])
-            ) {
-                postfix += stack.pop();
+            // Nếu gặp toán tử hoặc dấu ngoặc, xử lý bộ đệm trước
+            if (numberBuffer) {
+                postfix += numberBuffer + ' ';
+                numberBuffer = '';
             }
-            stack.push(token); // Thêm toán tử vào stack
+
+            if (token === '(') {
+                stack.push(token);
+            } else if (token === ')') {
+                while (stack.length && stack[stack.length - 1] !== '(') {
+                    postfix += stack.pop() + ' ';
+                }
+                stack.pop(); // Bỏ dấu mở ngoặc
+            } else {
+                // Nếu là toán tử, xử lý độ ưu tiên
+                while (
+                    stack.length &&
+                    precedence(token) <= precedence(stack[stack.length - 1])
+                ) {
+                    postfix += stack.pop() + ' ';
+                }
+                stack.push(token);
+            }
         }
+    }
+
+    // Xử lý số còn lại trong bộ đệm
+    if (numberBuffer) {
+        postfix += numberBuffer + ' ';
     }
 
     // Lấy các toán tử còn lại trong stack
     while (stack.length) {
-        postfix += stack.pop();
+        postfix += stack.pop() + ' ';
     }
 
-    return postfix;
+    return postfix.trim(); // Loại bỏ khoảng trắng thừa
 }
+// function infixToPostfix(infix) {
+//     const stack = [];
+//     let postfix = '';
+//     const precedence = (operator) => {
+//         if (operator === '+' || operator === '-') return 1;
+//         if (operator === '*' || operator === '/') return 2;
+//         return 0;
+//     };
+
+//     for (let i = 0; i < infix.length; i++) {
+//         const token = infix[i];
+
+//         if (!isNaN(token)) {
+//             // Nếu là số, thêm vào chuỗi hậu tố
+//             postfix += token;
+//         } else if (token === '(') {
+//             // Nếu là dấu mở ngoặc, đẩy vào stack
+//             stack.push(token);
+//         } else if (token === ')') {
+//             // Nếu là dấu đóng ngoặc, lấy các toán tử ra khỏi stack cho đến khi gặp dấu mở ngoặc
+//             while (stack.length && stack[stack.length - 1] !== '(') {
+//                 postfix += stack.pop();
+//             }
+//             stack.pop(); // Bỏ dấu mở ngoặc
+//         } else {
+//             // Nếu là toán tử, xử lý độ ưu tiên
+//             while (
+//                 stack.length &&
+//                 precedence(token) <= precedence(stack[stack.length - 1])
+//             ) {
+//                 postfix += stack.pop();
+//             }
+//             stack.push(token); // Thêm toán tử vào stack
+//         }
+//     }
+
+//     // Lấy các toán tử còn lại trong stack
+//     while (stack.length) {
+//         postfix += stack.pop();
+//     }
+
+//     return postfix;
+// }
 
 // Hàm tính toán biểu thức hậu tố (postfix)
 function evaluatePostfix(postfix) {
     const stack = [];
-    for (let i = 0; i < postfix.length; i++) {
-        const token = postfix[i];
+    const tokens = postfix.split(' '); // Tách các phần tử bằng khoảng trắng
+
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
         if (!isNaN(token)) {
             // Nếu là số, thêm vào stack
             stack.push(Number(token));
@@ -80,6 +138,27 @@ function evaluatePostfix(postfix) {
     }
     return stack.pop(); // Kết quả cuối cùng
 }
+// function evaluatePostfix(postfix) {
+//     const stack = [];
+//     for (let i = 0; i < postfix.length; i++) {
+//         const token = postfix[i];
+//         if (!isNaN(token)) {
+//             // Nếu là số, thêm vào stack
+//             stack.push(Number(token));
+//         } else {
+//             // Nếu là toán tử, lấy hai toán hạng từ stack và thực hiện phép tính
+//             const b = stack.pop();
+//             const a = stack.pop();
+//             switch (token) {
+//                 case '+': stack.push(a + b); break;
+//                 case '-': stack.push(a - b); break;
+//                 case '*': stack.push(a * b); break;
+//                 case '/': stack.push(a / b); break;
+//             }
+//         }
+//     }
+//     return stack.pop(); // Kết quả cuối cùng
+// }
 
 // Hàm tính toán biểu thức
 function calculate() {

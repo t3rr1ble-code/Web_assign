@@ -8,7 +8,7 @@ class Person {
 };
 
 let persons = [];
-let idCounter = 1; // Đồng bộ với script đầu tiên
+let idCounter = 1;
 
 const updateAgeLabel = () => {
     const age = document.getElementById('age').value;
@@ -28,7 +28,7 @@ const createPerson = () => {
     const person = new Person(idCounter++, name, age, parseFloat(gpa));
     persons.push(person);
 
-    const personList = document.getElementById('personList');
+    const personList = document.getElementById('list');
     const button = document.createElement('button');
 
     button.className = "btn btn-outline-primary btn-sm m-1";
@@ -47,7 +47,7 @@ const resetForm = () => {
 }
 
 const showPersonDetails = (person) => {
-    const personDetails = document.getElementById('personDetails');
+    const personDetails = document.getElementById('details');
     personDetails.innerHTML = `
         <table class="table table-bordered">
             <tr><th>ID</th><td>${person.id}</td></tr>

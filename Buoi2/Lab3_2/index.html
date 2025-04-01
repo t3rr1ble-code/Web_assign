@@ -13,7 +13,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" id="display" class="form-control" disabled>
+                    <input type="text" id="display" class="form-control" disabled placeholder="Input">
                 </div>
                 <div class="calculator-grid">
                     <!-- Calculator buttons -->
@@ -38,8 +38,8 @@
                     <button class="btn btn-primary" onclick="appendToDisplay('(')">(</button>
                 
                     <button class="btn btn-primary" onclick="appendToDisplay(')')">)</button>
-                    <button class="btn btn-success" onclick="calculate()">=</button>
-                    <button class="btn btn-danger" onclick="clearDisplay()">C</button>
+                    <button class="btn btn-danger function-btn" onclick="clearDisplay()">C</button>
+                    <button class="btn btn-success function-btn" onclick="calculate()">=</button>
                 </div>
                 <h3 class="mt-4">History</h3>
                 <div id="history" class="list-group"></div>
